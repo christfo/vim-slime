@@ -10,6 +10,10 @@ if !exists('g:slime_config_key')
   let g:slime_config_key = '<C-c>v'
 endif
 
+if !exists('g:slime_command_key')
+    let g:slime_command_key ='tt'
+end
+
 if !exists("g:slime_target")
   let g:slime_target = "screen"
 end
@@ -20,6 +24,7 @@ end
 execute 'vmap ' . g:slime_send_key . " \"ry:call <SID>SlimeSend(@r)<CR>"
 execute 'nmap ' . g:slime_send_key . " vip" . g:slime_send_key
 execute 'nmap ' . g:slime_config_key . " :call <SID>SlimeConfig()<CR>"
+execute 'cmap ' . g:slime_command_key . " :call <SID>To_Tmux()<CR>"
 
 if exists('g:slime_loaded')
   finish
@@ -105,3 +110,12 @@ function! s:SlimeDispatch(name, ...)
   let target = substitute(tolower(g:slime_target), '\(.\)', '\u\1', '') " Capitalize
   return call("s:" . target . a:name, a:000)
 endfunction
+
+
+" cribbed from idea in https://github.com/candland/tslime.vim
+function! s:To_Tmux()
+  let b:text = input("tmux:", "", "custom,")
+  call s:SlimeSend(b:text . "\n")
+endfunction
+
+
